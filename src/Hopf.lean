@@ -6,8 +6,6 @@ open algebra.tensor_product
 variables (K : Type) [field K]
 variables (V : Type) [semiring V] [algebra K V]
 
-structure hopf_algebra :=
-(comul : V →ₐ[K] V ⊗[K] V)
 /- A big structure. There's a lot of uglinesshere...
   So much of the text here is making natural isomorphisms explicit...
   `tensor_product.assoc K V V V` is associativiy of tensor product,
@@ -17,6 +15,8 @@ structure hopf_algebra :=
   `algebra.of_id` is the structure morphism K →ₐ[K] V
   Should I add notation for these? Is there a way to have lean automatically do these?
 -/
+structure hopf_algebra :=
+(comul : V →ₐ[K] V ⊗[K] V)
 (counit : V →ₐ[K] K)
 (coassoc : (tensor_product.assoc K V V V) ∘ (map comul (alg_hom.id K V)) ∘ comul = map (alg_hom.id K V) comul ∘ comul)
 (counit_left : (tensor_product.lid K V) ∘ (map counit (alg_hom.id K V)) ∘ comul = (alg_hom.id K V))
