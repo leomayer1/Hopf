@@ -4,7 +4,7 @@ open_locale tensor_product
 open algebra.tensor_product
 
 variables (K : Type) [field K]
-variables (V : Type) [semiring V] [algebra K V]
+variables (V : Type) [comm_ring V] [algebra K V]
 
 /- A big structure. There's a lot of uglinesshere...
   So much of the text here is making natural isomorphisms explicit...
