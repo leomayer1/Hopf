@@ -33,7 +33,10 @@ notation `Δ` :9000 := comul
 
 noncomputable def counit : K[X] →ₐ[K] K := polynomial.aeval 0
 
--- noncomputable lemma coassoc : (tensor_product.assoc K K[X] K[X] K[X]) ∘ (map (Δ K) (alg_hom.id K K[X])) ∘ (Δ K) = (map (alg_hom.id K K[X]) (Δ K)) ∘ (Δ K)) := sorry
--- begin
---   sorry
--- end
+def map1 : (K[X] →ₐ K[X] ⊗[K] K[X] ⊗[K] K[X]) := (tensor_product.assoc K K[X] K[X] K[X]) ∘ (map (Δ K) (alg_hom.id K K[X])) ∘ (Δ K)
+def map2 := (map (alg_hom.id K K[X]) (Δ K)) ∘ (Δ K)
+
+noncomputable lemma coassoc : map1 = map2 :=
+begin
+  sorry,
+end
