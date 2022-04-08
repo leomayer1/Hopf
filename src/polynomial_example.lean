@@ -5,7 +5,7 @@ open_locale tensor_product
 open_locale polynomial
 open algebra.tensor_product
 
-variables (K : Type) [field K]
+variables (K : Type) [comm_semiring K]
 
 noncomputable def counit : K[X] →ₐ[K] K := polynomial.aeval 0
 
@@ -13,22 +13,22 @@ noncomputable def comul : K[X] →ₐ[K] K[X] ⊗[K] K[X] := polynomial.aeval ((
 
 notation `Δ` :9000 := comul
 
-noncomputable def map1 : (K[X] → K[X] ⊗[K] (K[X] ⊗[K] K[X]) ) := (map (alg_hom.id K K[X]) (Δ K)) ∘ (Δ K)
+noncomputable def map1 : K[X] → K[X] ⊗ (K[X] ⊗ K[X]) := (map (alg_hom.id K K[X]) (Δ K)) ∘ (Δ K)
 
 noncomputable def map2_1 : (K[X] ⊗[K] K[X] ⊗[K] K[X] → K[X] ⊗[K] (K[X] ⊗[K] K[X]) ) := (tensor_product.assoc K K[X] K[X] K[X])
 
-#check (Δ K)
-#check map (alg_hom.id K K[X])
--- Stuff below breaks :(
-#check map (Δ K)
+noncomputable def map2_2 : (K[X] ⊗[K] K[X] → K[X] ⊗[K] K[X] ⊗[K] K[X] ) := map (Δ K : K[X] →ₐ[K] K[X] ⊗[K] K[X]) (alg_hom.id K K[X])
 
-noncomputable def map2_2 : (K[X] ⊗[K] K[X] → K[X] ⊗[K] K[X] ⊗[K] K[X] ) := map (Δ K) (alg_hom.id K K[X])
+noncomputable def map2_3 : K[X] → K[X] ⊗[K] K[X] := (Δ K : K[X] →ₐ[K] K[X] ⊗[K] K[X])
 
-noncomputable def map2_3 : (K[X] → K[X] ⊗[K] K[X]) := Δ K
+noncomputable def map2 : (K[X] → K[X] ⊗[K] (K[X] ⊗[K] K[X]) ) := (map2_1 K) ∘ (map2_2 K) ∘ (map2_3 K)
 
-noncomputable def map2 : (K[X] → K[X] ⊗[K] (K[X] ⊗[K] K[X]) ) := (tensor_product.assoc K K[X] K[X] K[X]) ∘ (map (Δ K) (alg_hom.id K K[X])) ∘ (Δ K)
+#check map2 K
+#check map1 K
+#check polynomial.aeval 
 
-noncomputable lemma coassoc : map1 = map2 :=
+-- TODO this is equality as set maps, not algebra maps 
+lemma coassoc : map1 K = map2 K :=
 begin
   sorry,
 end
