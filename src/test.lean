@@ -4,51 +4,34 @@ import tactic
 open_locale tensor_product
 open_locale polynomial
 open algebra.tensor_product
+open polynomial
 
 variables (K : Type) [comm_semiring K]
 
+noncomputable def counit : K[X] →ₐ[K] K := polynomial.aeval 0
+
 noncomputable def comul : K[X] →ₐ[K] K[X] ⊗[K] K[X] := polynomial.aeval ((polynomial.X ⊗ₜ 1) + (1 ⊗ₜ polynomial.X))
 
-notation `Δ` :9000 := comul
 
-noncomputable def map1 : K[X] → K[X] ⊗ (K[X] ⊗ K[X]) := (map (alg_hom.id K K[X]) (Δ K)) ∘ (Δ K : K[X] →ₐ[K] K[X] ⊗[K] K[X])
+noncomputable def map1 : K[X] →ₐ K[X] ⊗ K[X] ⊗ K[X] := (algebra.tensor_product.assoc K K[X] K[X] K[X]).symm.to_alg_hom.comp ((map (alg_hom.id K K[X]) (comul K)).comp (comul K))
 
-noncomputable def map2_1 : (K[X] ⊗[K] K[X] ⊗[K] K[X] → K[X] ⊗[K] (K[X] ⊗[K] K[X]) ) := (tensor_product.assoc K K[X] K[X] K[X])
+-- noncomputable def map2_1 : (K[X] ⊗[K] K[X] ⊗[K] K[X] →ₐ K[X] ⊗[K] (K[X] ⊗[K] K[X]) ) := (algebra.tensor_product.assoc K K[X] K[X] K[X]).to_alg_hom
 
-noncomputable def map2_2 : (K[X] ⊗[K] K[X] → K[X] ⊗[K] K[X] ⊗[K] K[X] ) := map (Δ K : K[X] →ₐ[K] K[X] ⊗[K] K[X]) (alg_hom.id K K[X])
+-- noncomputable def map2_2 : (K[X] ⊗[K] K[X] →ₐ K[X] ⊗[K] K[X] ⊗[K] K[X] ) := map (comul K : K[X] →ₐ[K] K[X] ⊗[K] K[X]) (alg_hom.id K K[X])
 
-noncomputable def map2_3 : K[X] → K[X] ⊗[K] K[X] := (Δ K : K[X] →ₐ[K] K[X] ⊗[K] K[X])
+-- noncomputable def map2_3 : K[X] →ₐ K[X] ⊗[K] K[X] := (comul K : K[X] →ₐ[K] K[X] ⊗[K] K[X])
 
-noncomputable def map2 : (K[X] → K[X] ⊗[K] (K[X] ⊗[K] K[X]) ) := (map2_1 K) ∘ (map2_2 K) ∘ (map2_3 K)
+noncomputable def map2 : (K[X] →ₐ K[X] ⊗[K] K[X] ⊗[K] K[X] ) :=  (map (comul K : K[X] →ₐ[K] K[X] ⊗[K] K[X]) (alg_hom.id K K[X])).comp (comul K : K[X] →ₐ[K] K[X] ⊗[K] K[X])
 
-lemma coassoc : map1 K = map2 K := -- this works
+lemma coassoc : map1 K = map2 K :=
 begin
+  have P : map1 K X = map2 K X,
+  unfold map1,
+  unfold map2,
+  unfold comul,
+  rw aeval_X (X ⊗ₜ[K] 1 + 1 ⊗ₜ[K] X), -- why does this not work?
+  unfold algebra.tensor_product.assoc,
+
   sorry,
+
 end
-
-lemma coassoc' : (map (alg_hom.id K K[X]) (Δ K)) ∘ (Δ K : K[X] →ₐ[K] K[X] ⊗[K] K[X]) = map2 K := -- this times out
-begin
-  sorry,
-end
-
-
-universes u v₁
-
-
-variables {R : Type u} [comm_semiring R]
-variables {A : Type v₁} [semiring A] [algebra R A]
-
-variables (R A)
-
-local attribute [elab_simple] alg_equiv_of_linear_equiv_triple_tensor_product
--- local attribute [elab_simple] assoc_aux_1
--- local attribute [elab_simple] assoc_aux_2
-
-/-- The associator for tensor product of R-algebras, as an algebra isomorphism. -/
--- FIXME This is _really_ slow to compile. :-(
-protected def assoc : ((A ⊗[R] A) ⊗[R] A) ≃ₐ[R] (A ⊗[R] (A ⊗[R] A)) :=
--- sorry
-alg_equiv_of_linear_equiv_triple_tensor_product
-  (tensor_product.assoc R A A A : (A ⊗ A ⊗ A) ≃ₗ[R] (A ⊗ (A ⊗ A))) (
-    assoc_aux_1)
-  (assoc_aux_2)
