@@ -1,8 +1,8 @@
 [package]
 name = "Hopf"
 version = "0.1"
-lean_version = "leanprover-community/lean:3.42.0"
+lean_version = "leanprover-community/lean:3.42.1"
 path = "src"
 
 [dependencies]
-mathlib = {git = "https://github.com/leanprover-community/mathlib", rev = "16fb8e269c48ff92ddfe9beec814865d5dfd0fa3"}
+mathlib = {git = "https://github.com/leanprover-community/mathlib", rev = "c988c6229455cbab9b4aaf07ab1ab41fa11c2f2b"}
