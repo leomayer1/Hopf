@@ -11,14 +11,6 @@ variables (K : Type*) [comm_ring K]
 
 -- set_option profiler true -- time everything
 
-@[simp] lemma assoc_symm_tmul {R : Type*} [comm_semiring R] {A : Type*} [semiring A] [algebra R A] {B : Type*} [semiring B] [algebra R B] {C : Type*} [semiring C] [algebra R C] (a : A) (b : B) (c : C) :
-(algebra.tensor_product.assoc R A B C).symm (a ⊗ₜ[R] (b ⊗ₜ[R] c)) = a ⊗ₜ[R] b ⊗ₜ[R] c :=
-begin
-  apply_fun (algebra.tensor_product.assoc R A B C),
-  rw [assoc_tmul, alg_equiv.apply_symm_apply],
-  exact (algebra.tensor_product.assoc R A B C).injective,
-end
-
 noncomputable def comul : K[X] →ₐ[K] K[X] ⊗[K] K[X] := aeval ((X ⊗ₜ 1) + (1 ⊗ₜ X))
 
 @[simp] lemma comul_1 : comul K (1 : K[X]) = (1 ⊗ₜ 1 : K[X] ⊗[K] K[X]) :=
@@ -33,19 +25,10 @@ begin
   rw aeval_X,
 end
 
-
-noncomputable def map1 : K[X] →ₐ[K] K[X] ⊗ K[X] ⊗ K[X] := (algebra.tensor_product.assoc K K[X] K[X] K[X]).symm.to_alg_hom.comp ((map (alg_hom.id K K[X]) (comul K)).comp (comul K))
-
-noncomputable def map2 : (K[X] →ₐ[K] K[X] ⊗[K] K[X] ⊗[K] K[X] ) :=  (map (comul K : K[X] →ₐ[K] K[X] ⊗[K] K[X]) (alg_hom.id K K[X])).comp (comul K : K[X] →ₐ[K] K[X] ⊗[K] K[X])
-. -- this tells Lean not to recompile definitions
-
-
-lemma coassoc : map1 K = map2 K := -- TODO this still takes 10 seconds to elaborate
+lemma coassoc :  (algebra.tensor_product.assoc K K[X] K[X] K[X]).to_alg_hom.comp ((map (comul K) (alg_hom.id K K[X])).comp (comul K)) = (map (alg_hom.id K K[X]) (comul K)).comp (comul K) := -- TODO this still takes 10 seconds to elaborate
 begin
   ext,
-  simp only [map1, map2, alg_equiv.to_alg_hom_eq_coe, alg_hom.coe_comp, alg_equiv.coe_alg_hom,
-    function.comp_app, comul_X, map_tmul, alg_hom.coe_id, id.def, comul_1,
-    tensor_product.tmul_add, add_assoc, assoc_symm_tmul, tensor_product.add_tmul, _root_.map_add],
+  simp only [algebra.tensor_product.assoc_tmul, alg_equiv.to_alg_hom_eq_coe, alg_hom.coe_comp, alg_equiv.coe_alg_hom, function.comp_app, comul_X, map_tmul, alg_hom.coe_id, id.def, comul_1, tensor_product.tmul_add, add_assoc, tensor_product.add_tmul, _root_.map_add],
 end
 
 noncomputable def counit : K[X] →ₐ[K] K := aeval 0
@@ -91,7 +74,26 @@ begin
 end
 .
 
-instance polynomial_hopf : hopf_algebra K K[X] := 
-begin 
-  sorry,
-end 
+set_option profiler true -- time everything
+
+noncomputable instance polynomial_hopf : hopf_algebra K K[X] := { -- TIMEOUT
+  comul := comul K,
+  counit := counit K,
+  coinv := coinv K,
+  coassoc := coassoc K,
+  counit_left := counit_left K,
+  counit_right := counit_right K,
+  coinv_right := coinv_right K,
+  coinv_left := coinv_left K,
+}
+
+noncomputable instance polynomial_hopf : hopf_algebra K K[X] := { -- elaboration of polynomial_hopf took 10.4s 
+  comul := comul K,
+  counit := counit K,
+  coinv := coinv K,
+  coassoc := sorry,
+  counit_left := counit_left K,
+  counit_right := counit_right K,
+  coinv_right := coinv_right K,
+  coinv_left := coinv_left K,
+}
