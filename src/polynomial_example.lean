@@ -32,7 +32,6 @@ local notation `V` := K[X]
 
 -- TODO make this a linear equality to make it faster?
 -- TODO convert to dot notation
-(algebra.tensor_product.assoc K V V V).to_alg_hom.comp ((map comul (alg_hom.id K V)).comp comul) = (map (alg_hom.id K V) comul).comp comul
 lemma coassoc :  (algebra.tensor_product.assoc K K[X] K[X] K[X]).to_alg_hom.comp ((map (comul K) (alg_hom.id K K[X])).comp (comul K)) = (map (alg_hom.id K K[X]) (comul K)).comp (comul K) :=
 begin
   ext,
@@ -143,6 +142,7 @@ end
 
 set_option profiler true -- time everything
 
+-- TODO figure out how to make an instance of a structure as opposed to a class
 noncomputable instance polynomial_hopf : hopf_algebra K K[X] := { -- no timeout!
   comul := comul K,
   counit := counit K,
