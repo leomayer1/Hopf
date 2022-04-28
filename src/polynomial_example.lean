@@ -8,6 +8,7 @@ open algebra.tensor_product
 open polynomial
 
 -- TODO variables {K : Type*} [comm_ring K]
+-- notation `K` := ℚ
 variables (K : Type*) [comm_ring K]
 
 set_option profiler true -- time everything
@@ -27,8 +28,11 @@ begin
   rw aeval_X,
 end
 
+local notation `V` := K[X]
+
 -- TODO make this a linear equality to make it faster?
 -- TODO convert to dot notation
+(algebra.tensor_product.assoc K V V V).to_alg_hom.comp ((map comul (alg_hom.id K V)).comp comul) = (map (alg_hom.id K V) comul).comp comul
 lemma coassoc :  (algebra.tensor_product.assoc K K[X] K[X] K[X]).to_alg_hom.comp ((map (comul K) (alg_hom.id K K[X])).comp (comul K)) = (map (alg_hom.id K K[X]) (comul K)).comp (comul K) :=
 begin
   ext,
@@ -139,16 +143,30 @@ end
 
 set_option profiler true -- time everything
 
-noncomputable instance polynomial_hopf : hopf_algebra K K[X] := { -- TIMEOUT!
+noncomputable instance polynomial_hopf : hopf_algebra K K[X] := { -- no timeout!
   comul := comul K,
   counit := counit K,
   coinv := coinv K,
-  coassoc := coassoc K,
+  coassoc := begin 
+    have := coassoc K,
+    exact this,
+  end,
   counit_left := counit_left K,
   counit_right := counit_right K,
   coinv_right := coinv_right K,
   coinv_left := coinv_left K,
 }
+
+-- noncomputable instance polynomial_hopf' : hopf_algebra K K[X] := { -- TIMEOUT!
+--   comul := comul K,
+--   counit := counit K,
+--   coinv := coinv K,
+--   coassoc := by exact coassoc K,
+--   counit_left := counit_left K,
+--   counit_right := counit_right K,
+--   coinv_right := coinv_right K,
+--   coinv_left := coinv_left K,
+-- }
 
 -- noncomputable instance polynomial_hopf : hopf_algebra K K[X] := { -- No timeout!
 --   comul := comul K,
