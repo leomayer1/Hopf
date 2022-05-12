@@ -35,7 +35,7 @@ local notation `V` := K[X]
 lemma coassoc :  (algebra.tensor_product.assoc K K[X] K[X] K[X]).to_alg_hom.comp ((map (comul K) (alg_hom.id K K[X])).comp (comul K)) = (map (alg_hom.id K K[X]) (comul K)).comp (comul K) :=
 begin
   ext,
-  rw [alg_hom.coe_comp, alg_hom.coe_comp, alg_hom.coe_comp, 
+  simp only [alg_hom.coe_comp, alg_hom.coe_comp, alg_hom.coe_comp, 
       function.comp_app, function.comp_app, function.comp_app, 
       comul_X K, 
       alg_hom.map_add, alg_hom.map_add, alg_hom.map_add, 
@@ -142,8 +142,10 @@ end
 
 set_option profiler true -- time everything
 
+#check hopf_algebra.mk
+
 -- TODO figure out how to make an instance of a structure as opposed to a class
-noncomputable instance polynomial_hopf : hopf_algebra K K[X] := { -- no timeout!
+noncomputable def polynomial_hopf : hopf_algebra K K[X] := { -- no timeout!
   comul := comul K,
   counit := counit K,
   coinv := coinv K,

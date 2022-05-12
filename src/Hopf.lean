@@ -18,10 +18,10 @@ variables (A : Type*) [comm_ring A] [algebra K A]
 structure hopf_algebra :=
 (comul : A →ₐ[K] A ⊗[K] A)
 (counit : A →ₐ[K] K)
-(coassoc : (tensor_product.assoc K A A A) ∘ (map comul (alg_hom.id K A)) ∘ comul = map (alg_hom.id K A) comul ∘ comul)
-(counit_left : (tensor_product.lid K A) ∘ (map counit (alg_hom.id K A)) ∘ comul = (alg_hom.id K A))
-(counit_right : (tensor_product.rid K A) ∘ (map (alg_hom.id K A) counit) ∘ comul = (alg_hom.id K A))
 (coinv : A →ₐ[K] A)
-(coinv_right : (lmul' K) ∘ (map (alg_hom.id K A) coinv) ∘ comul = (algebra.of_id K A) ∘ counit)
-(coinv_left : (lmul' K) ∘ (map coinv (alg_hom.id K A)) ∘ comul = (algebra.of_id K A) ∘ counit)
+(coassoc : (algebra.tensor_product.assoc K A A A).to_alg_hom.comp ((map comul (alg_hom.id K A)).comp comul) = (map (alg_hom.id K A) comul).comp comul)
+(counit_left : (algebra.tensor_product.lid K A).to_alg_hom.comp ((map counit (alg_hom.id K A)).comp comul) = (alg_hom.id K A))
+(counit_right : (algebra.tensor_product.rid K A).to_alg_hom.comp ((map (alg_hom.id K A) counit).comp comul) = (alg_hom.id K A))
+(coinv_right : (lmul' K).comp ((map (alg_hom.id K A) coinv).comp comul) = (algebra.of_id K A).comp counit)
+(coinv_left : (lmul' K).comp ((map coinv (alg_hom.id K A)).comp comul) = (algebra.of_id K A).comp counit)
 .
