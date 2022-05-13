@@ -15,7 +15,7 @@ variables (A : Type*) [comm_ring A] [algebra K A]
   `algebra.of_id` is the structure morphism K →ₐ[K] A
   Should I add notation for these? Is there a way to have lean automatically do these?
 -/
-structure hopf_algebra :=
+class hopf_algebra :=
 (comul : A →ₐ[K] A ⊗[K] A)
 (counit : A →ₐ[K] K)
 (coinv : A →ₐ[K] A)

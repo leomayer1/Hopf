@@ -11,7 +11,7 @@ open polynomial
 -- notation `K` := ℚ
 variables (K : Type*) [comm_ring K]
 
-set_option profiler true -- time everything
+-- set_option profiler true -- time everything
 
 -- noncomputable def comm_ring.comul : K[X] →ₐ[K] K[X] ⊗[K] K[X] := aeval ((X ⊗ₜ 1) + (1 ⊗ₜ X))
 noncomputable def comul : K[X] →ₐ[K] K[X] ⊗[K] K[X] := aeval ((X ⊗ₜ 1) + (1 ⊗ₜ X))
@@ -145,11 +145,11 @@ set_option profiler true -- time everything
 #check hopf_algebra.mk
 
 -- TODO figure out how to make an instance of a structure as opposed to a class
-noncomputable def polynomial_hopf : hopf_algebra K K[X] := { -- no timeout!
+noncomputable instance polynomial_hopf : hopf_algebra K K[X] := {
   comul := comul K,
   counit := counit K,
   coinv := coinv K,
-  coassoc := begin 
+  coassoc := begin -- prevents timeout!
     have := coassoc K,
     exact this,
   end,
@@ -158,25 +158,3 @@ noncomputable def polynomial_hopf : hopf_algebra K K[X] := { -- no timeout!
   coinv_right := coinv_right K,
   coinv_left := coinv_left K,
 }
-
--- noncomputable instance polynomial_hopf' : hopf_algebra K K[X] := { -- TIMEOUT!
---   comul := comul K,
---   counit := counit K,
---   coinv := coinv K,
---   coassoc := by exact coassoc K,
---   counit_left := counit_left K,
---   counit_right := counit_right K,
---   coinv_right := coinv_right K,
---   coinv_left := coinv_left K,
--- }
-
--- noncomputable instance polynomial_hopf : hopf_algebra K K[X] := { -- No timeout!
---   comul := comul K,
---   counit := counit K,
---   coinv := coinv K,
---   coassoc := sorry,
---   counit_left := counit_left K,
---   counit_right := counit_right K,
---   coinv_right := coinv_right K,
---   coinv_left := coinv_left K,
--- }
