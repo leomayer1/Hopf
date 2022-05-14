@@ -28,8 +28,6 @@ begin
   rw aeval_X,
 end
 
-local notation `V` := K[X]
-
 -- TODO make this a linear equality to make it faster?
 -- TODO convert to dot notation
 lemma coassoc :  (algebra.tensor_product.assoc K K[X] K[X] K[X]).to_alg_hom.comp ((map (comul K) (alg_hom.id K K[X])).comp (comul K)) = (map (alg_hom.id K K[X]) (comul K)).comp (comul K) :=
